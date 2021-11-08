@@ -59,7 +59,7 @@ test('handleSelect is called when an season is selected', () => {
 
     //Act
     const seasonSelector = screen.getByLabelText(/Select a Season/i);
-    userEvent.selectOptions((seasonSelector), ["1","2","3"])
+    userEvent.selectOptions((seasonSelector), ["1","3"])
     //Assert
 
     expect(getSeasonMock.mock.calls.length).toBe(1);
@@ -81,7 +81,6 @@ test('component renders when no seasons are selected and when rerenders with a s
     
     //Assert
     expect(episodeContainer).toBeInTheDocument();
-
 
 });
 

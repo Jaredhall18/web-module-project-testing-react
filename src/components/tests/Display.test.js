@@ -1,12 +1,86 @@
+import React from "react";
+import { screen, render, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Display from '../Display';
+
+import fetchShow from '../../api/fetchShow'
+
+//Setting a mock for our fetchShow API call
+jest.mock('../../api/fetchShow')
+
+const show = {
+    name: "Stranger Things",
+    summary: "Test Summary",
+    seasons: [
+        {
+            id:"1",
+            name: "Season 1",
+            episodes: [],
+        },
+        {
+         id:"2",
+         name: "Season 2",
+         episodes: [],
+     },
+     {
+         id:"3",
+         name: "Season 3",
+         episodes: [],
+     },
+    ]
+ }
 
 
+test("Render Display Component", () => {
+    render(<Display/>)
+})
 
 
+test("Does data display on button click", async () => {
+    
+    fetchShow.mockResolvedValueOnce(show)
+    //Arrange: render our component
+    render(<Display />)
 
+    //Act
+    const showButton = screen.getByRole("button")
+    userEvent.click(showButton)
+    //Assert
 
+    const showContainer = await screen.findByTestId("show-container")
 
+    expect(showContainer).toBeInTheDocument();
+})
 
+test("Do the seasons appear after fetch button is pressed", async () => {
+    
+    fetchShow.mockResolvedValueOnce(show)
+    //Arrange: render our component
+    render(<Display  />)
 
+    //Act
+    const showButton = screen.getByRole("button")
+    userEvent.click(showButton)
+    const seasonOptions= await screen.findAllByTestId("season-option")
+    
+    //Assert
+    expect(seasonOptions).toHaveLength(3);
+})
+
+test("Do the seasons appear after fetch button is pressed", async () => {
+    const displayFunction = jest.fn();
+    fetchShow.mockResolvedValueOnce(show)
+    //Arrange: render our component
+    render(<Display displayFunc={displayFunction} />)
+
+    //Act
+    const showButton = screen.getByRole("button")
+    userEvent.click(showButton)
+
+    //Assert
+    await waitFor(()=>expect(displayFunction).toHaveBeenCalledTimes(1));
+    
+})
 
 
 
